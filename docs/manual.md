@@ -53,23 +53,29 @@ Klicken Sie auf neues Material erstellen, wählen Sie einen Artikel aus der Know
 
 Besuchen Sie ein vorhandenes Material und klicken Sie auf "Klonen" im Admin-Bereich in der rechten Spalte.
 
-## Material Admin
+### Material info (Info zum Material)
 
-### KnowlegeBase
+Hier kann der Benutzer alle ihm bekannten Informationen zum Material eingeben. Du solltest eine "Einheit" für das Material auswählen und eine Stuckanzahl eingeben. Stuckanzahl kann leer gelassen werden, wenn der Betrag unbekannt ist.
+
+Die mit Restado geteilten Felder sind in der Benutzeroberfläche deutlich gekennzeichnet.
+
+### Material Admin
+
+#### KnowlegeBase
 
 Durch Anklicken des Kontrollkästchens "Benutzen in KnowledgeBase" bestätigen Sie, dass das Material als eine Art Vorlage zum Erstellen anderer Materialien zur Verfügung steht.
 
-### Klonen
+#### Klonen
 
 Über diese Schaltfläche kann direkt ein neues Material aus dem aktuellen Material geklont werden. Sie werden sofort auf die Infoseite für dieses Material weitergeleitet. Sie können auch sehen, welche Materialien aus diesem Material geklont wurden und welches Material (falls vorhanden) die Vorlage für das aktuelle Material war.
 
-### Löschen
+#### Löschen
 
 Über den Button "Löschen" kann ein Material gelöscht werden.
 
 Gelöschte Materialien finden Sie hier: https://gmit.material-mafia.net/dashboard/deleted/
 
-### Archivieren
+#### Archivieren
 
 Über diese Schaltfläche kann ein Material an das Archiv gesendet werden. MAterials können danach ausarchiviert werden. Archivierte Materialien finden Sie hier:
 
@@ -81,7 +87,19 @@ Materialien können auf Restado, einer Partner-Website, angezeigt werden. Durch 
 
 ### Verkaufen
 
-TODO
+Nachdem ein Material verkauft wurde, sollte es in der Rubrik Verkaufen als gebraucht verkauft gekennzeichnet werden.
+
+Der Benutzer kann den Preis, zu dem er den Artikel verkauft hat, und die Anzahl der verkauften Einheiten eingeben.
+
+Sie klicken dann auf Bestatigen.
+
+Der Verkauf wird protokolliert.
+
+Wenn der Benutzer das gesamte Material verkauft, wird das Material als verkauft markiert und weitere Verkaufsaktionen können nicht durchgeführt werden.
+
+Wenn der Benutzer nur einen Teil des Materials verkauft hat, wird das Material geklont, der Klon wird als verkauft markiert und die Stückzahl für das aktuelle Material wird um die verkaufte Anzahl reduziert.
+
+Bitte beachten Sie, dass wenn die Stückanzahl leer ist, der Benutzer das Material immer wieder verkaufen und weiterverkaufen kann. Dies soll Situationen Rechnung tragen, in denen die genaue Menge des Materials nicht bekannt ist, aber dennoch ein Verkauf stattfindet (z. B.: eine sehr lange Stoffrolle usw.).
 
 ### Bilder
 
@@ -94,6 +112,10 @@ Diese Kommentare sind nur für den internen Gebrauch bestimmt. Sie können alles
 ### Vorherige Aktionen
 
 Ein vollständiges Protokoll aller Aktionen, die mit dem aktuellen Material durchgeführt wurden, finden Sie hier.
+
+## Geber
+
+TODO
 
 ## Bericht
 
