@@ -1,0 +1,14 @@
+<form method="POST" action="{% url 'inventory_objekt_comment' objekt.id %}" id="id_comment_form">
+    {% csrf_token %}
+    <p>
+        <input type="text" id="id_comment_input" name="text" placeholder="Bemerkungstext" style="width: 100%"><br>
+    </p>
+
+    <p>
+        <input type="submit" value="Bemerkung hinzufugen">
+    </p>
+
+    <p style="font-size: 12px; margin-bottom: 0px;">
+        Diese Bemerkungen sind nur für den internen Gebrauch bestimmt und werden <b>nicht</b> an Restado übermittelt.
+    </p>
+</form>

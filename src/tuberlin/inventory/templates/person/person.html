@@ -1,0 +1,78 @@
+{% extends 'dashboards/base_dashboard.html' %}
+
+{% load inventory_templatetags %}
+
+{% block title %}
+Kontaktdaten
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-body offer-form-div">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <table>
+                        <tbody>
+                        {{ person_form.as_table }}
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="submit" value="Speichern">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                Erstellte Angebote
+            </div>
+            <div class="card-body">
+                <table id="id_objekts_table"
+                       style="width: 100%"
+                       data-ajax="/api/offers/all/?format=datatables&email={{ person.email }}">
+                    <thead>
+                        <tr>
+                            <th data-data="thumbnail">
+
+                            </th>
+                            <th data-data="offer_status_text">
+                                Angebotstatus
+                            </th>
+                            <th data-data="message">
+                                Nachricht
+                            </th>
+                            <th data-data="recent_offer_status_time">
+                                Hergestellt Am
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#id_objekts_table").DataTable({
+            "order": [],
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
+            }
+        });
+    });
+</script>
+
+{% endblock %}

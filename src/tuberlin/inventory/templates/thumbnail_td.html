@@ -1,0 +1,11 @@
+{% if objekt.thumbnail_image %}
+    <a href="{% url 'inventory_objekt' objekt.id %}">
+        <img class="thumbnail-image" src="{{ objekt.thumbnail_image.filename }}">
+    </a>
+{% endif %}
+
+{% if offer.thumbnail_image %}
+    <a href="{% url 'inventory_offer' offer.id %}">
+        <img class="thumbnail-image" src="{{ offer.thumbnail_image.filename }}">
+    </a>
+{% endif %}

@@ -1,0 +1,23 @@
+<li class="comments" id="id_comment_{{ comment.id }}_li">
+    <p style="margin-bottom: 2px;">{{ comment.text }}</p>
+    <p class="meta">bei <span class="black">{{ comment.created_by }} um {{ comment.created_at }}</p>
+
+    <form method="POST" action="{% url 'inventory_objekt_comment_delete' objekt.id comment.id %}" id="id_comment_{{ comment.id }}_delete_form">
+        {% csrf_token %}
+        <input type="submit" value="Löschen">
+    </form>
+</li>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#id_comment_{{ comment.id }}_delete_form").ajaxForm({
+            beforeSubmit : function(arr, $form, options) {
+                return true;
+            },
+            success: function(data) {
+                $("#id_comment_{{ comment.id }}_li").remove();
+                refresh_aktions();
+            }
+        });
+    });
+</script>

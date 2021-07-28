@@ -1,0 +1,341 @@
+{% extends 'dashboards/base_dashboard.html' %}
+
+{% load inventory_templatetags static %}
+
+{% block title %}
+Infos zum Material
+{% endblock %}
+
+{% block content %}
+<div id="id_fade_success_div">
+
+</div>
+
+<div class="spinner" style="display: none"></div>
+
+<div class="row">
+    <div class="col-lg-6">
+
+        <div class="card mb-4">
+            <div class="card-body offer-form-div">
+                {% include 'objekt/components/objekt_form.html' %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                Admin
+            </div>
+            <div class="card-body">
+
+
+                <form method="POST" id="id_knowledge_base_form" action="{% url 'inventory_objekt_knowledge_base' objekt.id %}">
+                    {% csrf_token %}
+                    <input type="checkbox"
+                           {% if objekt.knowledge_base %} checked {% endif %}
+                           name="knowledge_base"
+                           id="id_knowledge_base_checkbox"> Benutzen in KnowledgeBase.
+                </form>
+
+                <p style="font-size: 12px; margin-bottom: 0px;">
+                    Materialien in der KnowledgeBase können als Vorlagen für neue Materialien verwendet werden.
+                </p>
+                <hr/>
+
+                {% if objekt.cloned_from %}
+                <p>
+                    Dieses Material wurde aus <a href="{% url 'inventory_objekt' objekt.cloned_from.id %}">diesem Material</a> geklont.
+                </p>
+                <hr>
+                {% endif %}
+
+                <form method="POST" action="{% url 'inventory_objekt_clone' %}" id="id_clone_form">
+                    {% csrf_token %}
+                    <input type="hidden" name="objekt" value="{{ objekt.id }}">
+                    <input type="submit" value="Klonen">
+                </form>
+
+                <p style="font-size: 12px; margin-bottom: 0px; margin-top: 6px">
+                    Durch das Klonen dieses Materials wird ein neues Material mit den gleichen Eigenschaften wie dieses erstellt. Beachten Sie, dass das geklonte Material standardmäßig nicht in der KnowledgeBase angezeigt wird und es nicht als verkauft, gelöscht oder archiviert markiert wird.
+                </p>
+
+                {% if objekt.cloned_from_children.all %}
+                    <p style="margin-top: 12px">
+                        Dieses Material wurde geklont.
+                    </p>
+                    <ul>
+                        {% for ps in objekt.cloned_from_children.all %}
+                            <li>
+                                <a href="/objekt/{{ ps.id }}">{{ ps.title }}</a> um {{ ps.created_at }} bei {{ ps.created_by }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <hr>
+
+                {% if objekt.deleted_at %}
+                <p>
+                    Dieses Material <b>wurde</b> um zehn Uhr {{ objekt.deleted_at }} <b>gelöscht</b>.
+                </p>
+
+                <form method="POST" action="{% url 'inventory_objekt_undelete' objekt.id %}">
+                    {% csrf_token %}
+                    <input type="submit" value="Undo Löschen">
+                </form>
+                {% else %}
+                    <p>Dieses Material ist <b>nicht</b> gelöscht.
+                    <form method="POST" action="{% url 'inventory_objekt_delete' objekt.id %}">
+                        {% csrf_token %}
+                        <input type="submit" value="Löschen (zum Papierkorb)">
+                    </form>
+                {% endif %}
+
+                <p style="font-size: 12px; margin-bottom: 0px; margin-top: 6px">
+                    Als gelöscht markierte Materialien werden nicht an Restado übermittelt.
+                </p>
+                <hr>
+
+                {% if objekt.archived_at %}
+                    <p>
+                        Dieses Material <b>wurde</b> um zehn Uhr {{ objekt.archived_at }} <b>archiviert</b>.
+                    </p>
+
+                    <form method="POST" action="{% url 'inventory_objekt_unarchive' objekt.id %}">
+                        {% csrf_token %}
+                        <input type="submit" value="Aus dem Archiv entfernen">
+                    </form>
+                {% else %}
+                    <p>
+                        Dieses Material ist <b>nicht</b> archiviert.
+                    </p>
+
+                    <form method="POST" action="{% url 'inventory_objekt_archive' objekt.id %}">
+                        {% csrf_token %}
+                        <input type="submit" value="Archivieren">
+                    </form>
+                {% endif %}
+                <p style="font-size: 12px; margin-bottom: 0px; margin-top: 6px">
+                    Als archiviert markierte Materialien werden nicht an Restado übermittelt.
+                </p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                Restado
+            </div>
+            {% if not objekt.sold_at and not objekt.archived_at and not objekt.deleted_at %}
+            <div class="card-body">
+                <form method="POST" id="id_restado_form" action="{% url 'inventory_objekt_restado' objekt.id %}">
+                    {% csrf_token %}
+                    <input type="checkbox"
+                           {% if objekt.available_on_restado %} checked {% endif %}
+                           name="restado"
+                           id="id_restado_checkbox"> Verfügbar auf Restado.
+
+                    <p style="font-size: 12px; margin-bottom: 0px; margin-top: 6px">
+                        Als "Auf Restado verfügbar" gekennzeichnete Material werden automatisch an Restado übermittelt.
+                    </p>
+                </form>
+            </div>
+            {% else %}
+            <div class="card-body">
+
+                <p>
+                    Dieses Material wurde verkauft und kann auf Restado nicht mehr angeboten werden.
+                </p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                Verkaufen
+            </div>
+            <div id="id_sold_div">
+                {% include 'objekt/components/sold.html' %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                Bilder
+            </div>
+            <div class="card-body">
+                {% include 'objekt/components/objekt_images.html' %}
+            </div>
+            <div class="card-body">
+            <p style="font-size: 12px; margin-bottom: 0px;">
+                Diese Bilder werden an Restado übermittelt. Restado wird das oben angegebene Hauptbild als "Featured Image" verwenden.
+            </p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                Bemerkungen
+            </div>
+            <div class="card-body">
+                {% include 'objekt/components/objekt_comments.html' %}
+                <hr>
+                {% include 'objekt/components/objekt_comment_form.html' %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                Vorherige Aktionen
+            </div>
+            <div class="card-body" id="id_aktion_div">
+                {% include 'objekt/components/aktions.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var objekt_form_dirty = false;
+
+    function refresh_aktions() {
+        $.get(
+            '/objekt/{{ objekt.id }}/aktions/',
+            function(data) {
+                $("#id_aktion_div").html(data.html);
+            }
+        );
+    }
+
+    function init_sold_form() {
+        $("#id_sold_form").ajaxForm({
+            beforeSubmit : function(arr, $form, options) {
+                return true;
+            },
+            success: function(data) {
+                console.log(data);
+                if(data.success == false) {
+                    alert(data.message);
+                } else {
+                    $("#id_sold_div").html(data.html);
+                    init_sold_form();
+                    $("#id_count").val(data.remaining_count);
+                    alert("Material wurde verkauft");
+                    refresh_aktions();
+                }
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        $("#id_knowledge_base_checkbox").click(function() {
+            $("#id_knowledge_base_form").submit();
+        });
+
+        $("#id_knowledge_base_form").ajaxForm({
+            beforeSubmit : function(arr, $form, options) {
+                return true;
+            },
+            success: function(data) {
+                alert("Ihre Präferenz für die KnowledgeBase wurde gespeichert.");
+                refresh_aktions();
+            }
+        });
+
+        $("#id_restado_checkbox").click(function() {
+            $("#id_restado_form").submit();
+        });
+
+        $("#id_restado_form").ajaxForm({
+            beforeSubmit : function(arr, $form, options) {
+                return true;
+            },
+            success: function(data) {
+                alert("Ihre Präferenz für die Restado wurde gespeichert.");
+                refresh_aktions();
+            }
+        });
+
+        $("#id_objekt_form input").keydown(function() {
+            objekt_form_dirty = true;
+        });
+
+        $("#id_objekt_form textarea").keydown(function() {
+            objekt_form_dirty = true;
+        });
+
+        $('select').on('change', function() {
+            objekt_form_dirty = true;
+        });
+
+        $(window).bind('beforeunload', function(e) {
+            if(!objekt_form_dirty) {
+                e = null;
+            } else {
+                return true;
+            }
+        });
+
+        $("#id_objekt_form").ajaxForm({
+            beforeSubmit : function(arr, $form, options) {
+                return true;
+            },
+            success: function(data) {
+                if(data.success == false) {
+                    alert(data.message);
+                } else {
+                    alert("Gespeichert");
+                    refresh_aktions();
+                }
+                objekt_form_dirty = false;
+            }
+        });
+
+        $("#id_comment_form").ajaxForm({
+            beforeSubmit : function(arr, $form, options) {
+                return true;
+            },
+            success: function(data) {
+                if(data.success == false) {
+                    alert(data.message);
+                } else {
+                    $("#id_comments_ul").append(data.html);
+                    $("#id_comment_input").val('');
+                    refresh_aktions();
+                }
+            }
+        });
+
+        $("#id_clone_form").ajaxForm({
+            success: function(data) {
+                alert("Dieses Material wurde geklont. Sie gelangen nun auf die Verwaltungsseite für das geklonte Material.");
+                window.location = data.redirect_url;
+            }
+        });
+
+        init_sold_form();
+
+        $.ajaxSetup({
+             beforeSend: function(xhr, settings) {
+                 if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                     // Only send the token to relative URLs i.e. locally.
+                     xhr.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'));
+                 }
+             }
+        });
+
+        $(document).on('ajaxError', function(event, xhr) {
+            if (xhr.status === 401 || xhr.status === 403) {
+                alert("Sie haben nicht die erforderlichen Berechtigungen, um diese Aktion auszuführen.");
+            } else if(xhr.status == 500 || xhr.status == 405 || xhr.status == 404) {
+                alert("Dieser Vorgang ist fehlgeschlagen.");
+            } else {
+                // alert("generic error", xhr.status);
+            }
+            $(".spinner").hide();
+        });
+
+    });
+</script>
+
+{% endblock %}

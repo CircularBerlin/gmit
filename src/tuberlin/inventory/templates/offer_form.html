@@ -1,0 +1,81 @@
+<div class="form-container">
+    <h3>Nachricht *</h3>
+    <textarea name="message" style="width: 100%" rows="10" required="" id="id_message"></textarea><br>
+    <p>Bitte so ausführlich wie möglich das Material/Produkt beschreiben, inklusive Maße, Materialart und Zustand.</p>
+</div>
+
+<div class="form-container">
+    <h3>Bild</h3>
+    <p>
+        Bilder helfen uns, das Material/Produkt besser einschätzen zu können.
+    </p>
+    <input type="file" name="image" accept="image/*" id="id_image">
+</div>
+
+<div class="form-container">
+    <h3>Lieferpräferenzen</h3>
+    <select name="import_preferences" id="id_import_preferences">
+        <option value="PICKUP">Abholung</option>
+
+        <option value="DELIVERY" selected="selected">Lieferung an Material Mafia (bevorzugt)</option>
+
+    </select>
+</div>
+
+<div class="form-container">
+        <p>
+            Name *
+            <br>
+            <input type="text" name="person_name" maxlength="200" required="" id="id_person_name">
+        </p>
+
+        <p>
+            Email *
+            <br>
+            <input type="email" name="email" maxlength="254" required="" id="id_email">
+        </p>
+
+        <p>
+            Telefonnummer *
+            <br>
+            <input type="text" name="phone_number" maxlength="50" required="" id="id_phone_number">
+        </p>
+
+        <p>
+            Anbietertyp
+            <br>
+            <select name="provider_type" id="id_provider_type_select">
+                <option value="PRIVATE">Privat</option>
+                <option value="COMMERCIAL">Kommzerziell</option>
+            </select>
+        </p>
+
+        <p style="display:none" id="id_provider_type_p">
+            Beschreibung des Anbieters
+            <br>
+            <input name="provider_description">
+        </p>
+</div>
+
+<div class="form-container">
+    <p>
+    Wir verwenden die hier angegebenen Kontaktinformationen nur, um auf Ihr Materialspendenangebot zu antworten. Wir werden Ihren Arbeitsbereich zur Abschätzung des Abfallvermeidungspotenzials zur Kenntnis nehmen. Alle Informationen werden gemäß GDPR verarbeitet.
+    </p>
+    <input type="checkbox" required="required"> Ich bestätige, dass die oben genannten Informationen in Übereinstimmung mit der GDPR gespeichert werden.
+</div>
+
+<div>
+    <input type="submit" value="Abschicken"></td>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#id_provider_type_select").change(function() {
+            if($("#id_provider_type_select").val() == 'PRIVATE') {
+                $("#id_provider_type_p").hide();
+            } else {
+                $("#id_provider_type_p").show();
+            }
+        });
+    });
+</script>

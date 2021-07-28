@@ -1,0 +1,7 @@
+    {% if user.is_authenticated %}
+        <ul class="comments" id="id_comments_ul">
+            {% for comment in objekt.comments.all %}
+                {% include 'objekt/components/objekt_comment.html' %}
+            {% endfor %}
+        </ul>
+    {% endif %}

@@ -1,0 +1,31 @@
+{% extends 'objekt/pages/base.html' %}
+{% load inventory_templatetags %}
+
+{% block content %}
+<!-- Content Wrapper -->
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card mb-8">
+            <div class="card-header">
+                <h1>Material anbieten</h1>
+            </div>
+
+            <div class="card-body" style="background-color: #AAAAAA; color: black;">
+                <p>Sie haben Materialien oder Gegenstände die sie entsorgen, aber nicht wegwerfen wollen? Hier können Sie eine unverbindliche Anfrage an die Material Mafia stellen. Die standarisierte Anfrage erleichtert und beschleunigt den Ablauf ihrer Anfrage! Herzlichen Dank! Ich freue mich darauf!</p>
+
+                <p><i>Simone von der Material Mafia</i></p>
+
+                <form action="{% url 'inventory_offer_create' %}" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+
+                    {% include 'offer_form.html' %}
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

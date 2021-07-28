@@ -1,0 +1,33 @@
+<div class="tab-container">
+    <ul>
+        <li class="tab {% if tab_stub == 'all' %}active{% endif %}">
+            <a href="{% url 'inventory_objekt_dashboard_materials' %}">
+                <span>Alle</span></a>
+        </li>
+
+        <li class="tab {% if tab_stub == 'warehouse' %}active{% endif %}">
+            <a href="{% url 'inventory_objekt_dashboard_warehouse' %}">
+                <span>Intern</span></a>
+        </li>
+
+        <li class="tab {% if tab_stub == 'available' %}active{% endif %}">
+            <a href="{% url 'inventory_objekt_dashboard_available' %}">
+                <span>Verfügbar auf Restado</span></a>
+        </li>
+
+        <li class="tab {% if tab_stub == 'sold' %}active{% endif %}">
+            <a href="{% url 'inventory_objekt_dashboard_sold' %}">
+                <span>Verkauft</span></a>
+        </li>
+
+        <li class="tab {% if tab_stub == 'archived' %}active{% endif %}">
+            <a href="{% url 'inventory_objekt_dashboard_archived' %}">
+                <span>Archiviert</span></a>
+        </li>
+
+        <li class="tab {% if tab_stub == 'deleted' %}active{% endif %}">
+            <a href="{% url 'inventory_objekt_dashboard_deleted' %}">
+                <span>Papierkorb</span></a>
+        </li>
+    </ul>
+</div>

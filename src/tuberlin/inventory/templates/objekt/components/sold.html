@@ -1,0 +1,79 @@
+{% load inventory_templatetags %}
+
+        {% if objekt.sold_at or objekt.archived_at or objekt.deleted_at %}
+            <div class="card-body">
+                {% if objekt.deleted_at %}
+                    <p>Dieses Material wurde als <b>gelöscht</b> markiert und <b>kann nicht verkauft</b> werden.</p>
+                {% endif %}
+
+                {% if objekt.archived_at %}
+                    <p>Dieses Material wurde als <b>archiviert</b> markiert und <b>kann nicht verkauft</b> werden.</p>
+                {% endif %}
+
+                {% if objekt.sold_at %}
+                    <p>Dieses Material wurde <b>verkauft</b> und <b>kann nicht wieder verkauft</b> werden.
+                        <p>
+                            Verkauft {{ objekt.sold_count }} {{ objekt.unit }} at {{ objekt.sold_price_per_unit }} per {{ objekt.unit }} on {{ objekt.sold_at }} by {{ objekt.sold_by }}
+                        </p>
+                        {% if objekt.partial_sale_parent %}
+                        <p>Dieser Verkauf war ein Teilverkauf <a href="/objekt/{{ objekt.partial_sale_parent.id }}/">dieses Materials.</a></p>
+                {% endif %}
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% if not objekt.sold_at and not objekt.archived_at and not objekt.deleted_at %}
+            <div class="card-body">
+                <form method="POST" id="id_sold_form" action="{% url 'inventory_objekt_sold' objekt.id %}">
+                    {% csrf_token %}
+                    <table style="width: 50%">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <label>Verkaufte Einheit</label>
+                                </th>
+                                <td>
+                                    <input required="true" name="count" value="{{ objekt.count|blank_none }}">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    <label>Verkaufspreis pro Einheit</label>
+                                </th>
+                                <td>
+                                    <input required="true" name="price" placeholder="Bitte geben Sie einen Verkaufspreis an" value="{{ objekt.price|blank_none }}">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                <input type="submit" value="Bestätigen">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p style="font-size: 12px; margin-bottom: 0px; margin-top: 6px">
+                        Wenn Sie bestätigen, wird dieses Material als verkauft gekennzeichnet. Wenn von dem neuen Material übrig bleibt (dh wenn Sie weniger verkauft haben, als Sie im Lager haben), wird ein neuer Materialeintrag erstellt, um das verbleibende Material zu berücksichtigen.
+                    </p>
+                </form>
+                </div>
+            {% endif %}
+                {% if objekt.partial_sale_children.all %}
+                <div class="card-body">
+                    <h4>Teilverkauf</h4>
+                    <p>
+                        Teile dieses Materials wurden verkauft. Siehe unten.
+                    </p>
+
+                    <ul>
+                        {% for ps in objekt.partial_sale_children.all %}
+                            <li>
+                                <a href="/objekt/{{ ps.id }}/">Verkauft</a> {{ ps.sold_count }} {{ ps.unit }} für {{ ps.sold_price_per_unit }}€ pro {{ ps.unit }} am {{ ps.sold_at }} von {{ ps.sold_by }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+            {% endif %}

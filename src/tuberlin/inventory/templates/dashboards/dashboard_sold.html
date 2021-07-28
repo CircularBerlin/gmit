@@ -1,0 +1,77 @@
+{% extends 'dashboards/base_dashboard.html' %}
+
+{% block title %}
+  Materialen
+{% endblock %}
+
+{% block content %}
+  {% include 'dashboards/material_tabs.html' %}
+
+  <table id="id_objekts_table"
+         style="width: 100%"
+         data-ajax="/api/objekts/sold/?format=datatables">
+    <thead>
+      <tr>
+          <th data-data="link">
+              Haupttitel
+          </th>
+
+          <th data-data="thumbnail">
+              Bild
+          </th>
+
+          <th data-data="material_text">
+              Materialkategorie
+          </th>
+
+          <th data-data="sold_at_display">
+              Verkauft um
+          </th>
+
+          <th data-data="updated_at_display">
+              Letzte Aktualisierung
+          </th>
+
+          <th data-data="sold_at">
+
+          </th>
+
+          <th data-data="updated_at">
+
+          </th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("#id_objekts_table").DataTable({
+        "order": [[4, "desc"]],
+      "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
+        },
+        'columnDefs': [
+            {
+                'orderData':[5], 'targets': [3]
+            },
+            {
+                'orderData':[6], 'targets': [4]
+            },
+            {
+                'targets': [5],
+                'visible': false,
+                'searchable': false
+            },
+            {
+                'targets': [6],
+                'visible': false,
+                'searchable': false
+            },
+        ],
+      });
+    });
+  </script>
+{% endblock %}

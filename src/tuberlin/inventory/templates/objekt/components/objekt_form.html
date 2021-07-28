@@ -1,0 +1,81 @@
+{% load inventory_templatetags %}
+
+<form method="POST" id="id_objekt_form">
+    {% csrf_token %}
+    <table style="width: 100%">
+        <tbody>
+            {{ objekt_form.as_table }}
+
+            <tr>
+                <th>
+                    <label>
+                        Materialen:
+                    </label>
+                </th>
+
+                <td>
+                    <ul class="form-panel-list" id="id_material_ul" >
+                        {% if objekt %}
+                            {% for material in objekt.material.all %}
+                                <li>
+                                    {% include 'objekt/components/dropdown.html' with type='material' choices=materials selected=material %}
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+
+                        <li>
+                            {% include 'objekt/components/dropdown.html' with type='material' choices=materials %}
+                        </li>
+                    </ul>
+                    <ul class="form-panel-list">
+                        <li>
+                            <a href="#" id="id_material_add_link">Material Hinzufügen</a>
+                        </li>
+                        <li>
+                            <span class="helptext">
+                                Sie können beliebig viele Materialkategorien hinzufügen. Wählen Sie "--", um eine Materialkategorie zu löschen. Alle Materialkategorien werden an Restado übermittelt.
+                            </span>
+                        </li>
+                    </ul>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+
+                </td>
+                <td>
+                    <input type="submit" value="Speichern">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#id_material_add_link').click(function() {
+            var last_element = $('#id_material_ul').children().last();
+            console.log(last_element);
+            $('#id_material_ul').append(last_element.clone());
+
+            $(".material_input").devbridgeAutocomplete({
+                serviceUrl: '/autocomplete/material/',
+                minChars: 0,
+                onSelect: function(suggestion) {
+
+                }
+            });
+            return false;
+        });
+
+        $(".material_input").devbridgeAutocomplete({
+            serviceUrl: '/autocomplete/material/',
+            minChars: 0,
+            onSelect: function(suggestion) {
+
+            }
+        });
+    });
+</script>

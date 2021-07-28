@@ -1,0 +1,55 @@
+{% extends 'dashboards/base_dashboard.html' %}
+
+{% load inventory_templatetags %}
+
+{% block title %}
+    Material Erstellen
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-body offer-form-div">
+                <h3>KnowledgeBase</h3>
+                <p>Es ist möglich, ein vorhandenes Material zu klonen. Sie sind unten aufgeführt, wobei häufigere Materialen zuerst angezeigt werden.</p>
+
+                <hr>
+
+                {% if objekts %}
+                <form action="{% url 'inventory_objekt_clone' %}" method="POST" id="id_clone_form">
+                    {% csrf_token %}
+                    <p>
+                        <select name="objekt" style="width: 100%">
+                            {% for objekt in objekts %}
+                                <option value="{{ objekt.id }}">{{ objekt.title|none_none }}</option>
+                            {% endfor %}
+                        </select>
+                    </p>
+
+                    <input type="submit" value="Klonen">
+                </form>
+                {% else %}
+                    <p>Sie haben jedoch derzeit keine Materialien, die als KnowledgeBase gekennzeichnet sind. Bitte gehen Sie auf eine einzelne Materialseite und aktivieren Sie das Kontrollkästchen "Benutzen in KnowledgeBase".</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body offer-form-div">
+                <h3>... oder Neue Erstellen</h3>
+                {% include 'objekt/components/objekt_form.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#id_clone_form").ajaxForm({
+            success: function(data) {
+                window.location = data.redirect_url;
+            }
+        });
+    });
+</script>
+{% endblock %}

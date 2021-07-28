@@ -1,0 +1,48 @@
+{% for image in objekt.images.all %}
+    <div style="max-width: 240px; border: 1px solid black; padding: 10px; margin-bottom: 10px; margin-right: 10px; float: left">
+      <img style="max-width: 220px"
+           class="example-image"
+           src="{{ image.filename }}"
+           alt="" />
+      <hr/>
+
+      <form action="{% url 'inventory_objekt_images_delete' objekt.id image.id %}"
+            id="id_images_{{ image.id }}_delete_form"
+            style="margin-bottom: 4px;">
+          {% csrf_token %}
+          <input type="submit" value="Löschen" style="width: 220px">
+      </form>
+
+      {% if objekt.thumbnail_image != image %}
+          <form action="{% url 'inventory_objekt_images_thumbnail' objekt.id image.id %}"
+                id="id_images_{{ image.id }}_thumbnail_form">
+              {% csrf_token %}
+              <input type="submit" value="Als Hauptbild festsetzen" style="width: 220px">
+          </form>
+      {% else %}
+        <p style="font-size: 12px; margin-bottom: 0px;">
+            Dieses Bild wurde als Hauptbild gewählt.
+        </p>
+      {% endif %}
+    </div>
+    <script type="text/javascript">
+        $(document).ready( function() {
+            $("#id_images_{{ image.id }}_delete_form").ajaxForm({
+                success: function(data) {
+                    alert("Gespeichert");
+                    $("#id_images_div").html(data.html);
+                    refresh_aktions();
+                }
+            });
+
+            $("#id_images_{{ image.id }}_thumbnail_form").ajaxForm({
+                success: function(data) {
+                    alert("Gespeichert");
+                    $("#id_images_div").html(data.html);
+                    refresh_aktions();
+                }
+            });
+        });
+    </script>
+{% endfor %}
+<div style="clear:both"></div>

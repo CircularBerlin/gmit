@@ -1,0 +1,22 @@
+<div class="tab-container">
+    <ul>
+        <li class="tab {% if tab_stub == 'all' %}active{% endif %}">
+            <a href="{% url 'inventory_objekt_dashboard_offers' %}">
+                <span>Alle</span></a>
+        </li>
+
+        <li class="tab {% if tab_stub == 'pending' %}active{% endif %}">
+            <a href="{% url 'inventory_objekt_dashboard_pending' %}">
+                <span>Anstehend</span></a>
+        </li>
+
+        <li class="tab {% if tab_stub == 'accepted' %}active{% endif %}">
+            <a href="{% url 'inventory_objekt_dashboard_accepted' %}">
+                <span>Akzeptiert</span></a>
+        </li>
+        <li class="tab {% if tab_stub == 'rejected' %}active{% endif %}">
+            <a href="{% url 'inventory_objekt_dashboard_rejected' %}">
+                <span>Abgelehnt</span></a>
+        </li>
+    </ul>
+</div>

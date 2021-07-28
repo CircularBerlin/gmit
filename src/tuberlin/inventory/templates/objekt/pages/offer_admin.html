@@ -1,0 +1,153 @@
+{% extends 'dashboards/base_dashboard.html' %}
+
+{% load inventory_templatetags %}
+
+{% block title %}
+Angebot
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-body offer-form-div">
+                <table>
+                    <tbody>
+                    <tr>
+                        <td>
+                            Email:
+                        </td>
+                        <td>
+                            {{ offer.email }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Name:
+                        </td>
+                        <td>
+                            {{ offer.person_name }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Telefon:
+                        </td>
+                        <td>
+                            {{ offer.phone_number }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Nachricht:
+                        </td>
+                        <td>
+                            {{ offer.message }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Anbietertyp:
+                        </td>
+                        <td>
+                            {{ offer.provider_type }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Anbieterbeschreibung:
+                        </td>
+                        <td>
+                            {{ offer.provider_description }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Bild:
+                        </td>
+                        <td>
+                            <img width="400px" src="{{ offer.thumbnail_image.filename }}">
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td colspan="2">
+                            <hr>
+                        </td>
+                    </tr>
+
+                    <form action="{% url 'inventory_offer' offer.id %}" method="POST">
+                        {% csrf_token %}
+
+                        <tr>
+                            <td>Status</td>
+                            <td>
+                                <select name="status">
+                                    <option value="1" {% if offer.offer_status.id == 1 %}selected{% endif %}>Anstehend
+                                    </option>
+                                    <option value="2" {% if offer.offer_status.id == 2 %}selected{% endif %}>Abgelehnt
+                                    </option>
+                                    <option value="3" {% if offer.offer_status.id == 3 %}selected{% endif %}>
+                                        Akzeptiert
+                                    </option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td></td>
+                            <td>
+                                <input type="submit">
+                            </td>
+                        </tr>
+                    </form>
+                    <tr>
+                        <td>
+
+                            Log
+                        </td>
+                        <td>
+
+                            <ul>
+                                {% for status in offer.offerstatuslog_set.all %}
+                                <li>
+                                    {{ status.offer_status }} - {{ status.created_at }} bei {{ status.created_by }}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body offer-form-div">
+                <form action="{% url 'inventory_offer_transform' offer.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="Objekt aus diesem Angebot erstellen">
+                </form>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body offer-form-div">
+                <form action="{% url 'inventory_offer_delete' offer.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="Löschen">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,114 @@
+[
+  {
+    "model": "inventory.offerstatus",
+    "pk": 1,
+    "fields": {
+      "updated_at": "2020-08-12T13:56:38Z",
+      "deleted_at": null,
+      "created_at": "2020-08-12T13:56:38Z",
+      "created_by": 1,
+      "text": "pending",
+      "display_name": "Anstehend",
+      "help_text": null,
+      "ordering": 0
+    }
+  },
+  {
+    "model": "inventory.offerstatus",
+    "pk": 2,
+    "fields": {
+      "updated_at": "2020-08-12T13:56:48Z",
+      "deleted_at": null,
+      "created_at": "2020-08-12T13:56:48Z",
+      "created_by": 1,
+      "text": "rejected",
+      "display_name": "Abgelehnt",
+      "help_text": null,
+      "ordering": 10
+    }
+  },
+  {
+    "model": "inventory.offerstatus",
+    "pk": 3,
+    "fields": {
+      "updated_at": "2020-08-20T07:21:01.590Z",
+      "deleted_at": null,
+      "created_at": "2020-08-20T07:20:49Z",
+      "created_by": 1,
+      "text": "accepted",
+      "display_name": "Akzeptiert",
+      "help_text": "",
+      "ordering": 20
+    }
+  },
+  {
+    "model": "inventory.objektstatus",
+    "pk": 1,
+    "fields": {
+      "updated_at": "2020-08-20T07:21:01.590Z",
+      "deleted_at": null,
+      "created_at": "2020-08-20T07:20:49Z",
+      "created_by": 1,
+      "text": "warehouse",
+      "display_name": "Verfügbar (nur Intern)",
+      "help_text": "",
+      "ordering": 10
+    }
+  },
+  {
+    "model": "inventory.objektstatus",
+    "pk": 2,
+    "fields": {
+      "updated_at": "2020-08-19T13:09:04.241Z",
+      "deleted_at": null,
+      "created_at": "2020-08-19T13:08:39Z",
+      "created_by": 1,
+      "text": "available",
+      "display_name": "Verfügbar (öffentlich)",
+      "help_text": "",
+      "ordering": 20
+    }
+  },
+  {
+    "model": "inventory.objektstatus",
+    "pk": 3,
+    "fields": {
+      "updated_at": "2020-08-20T07:21:01.590Z",
+      "deleted_at": null,
+      "created_at": "2020-08-20T07:20:49Z",
+      "created_by": 1,
+      "text": "sold",
+      "display_name": "Verkauft",
+      "help_text": "",
+      "ordering": 30
+    }
+  },
+  {
+    "model": "inventory.objektstatus",
+    "pk": 4,
+    "fields": {
+      "updated_at": "2020-08-20T07:21:01.590Z",
+      "deleted_at": null,
+      "created_at": "2020-08-20T07:20:49Z",
+      "created_by": 1,
+      "text": "reserved",
+      "display_name": "Reserviert",
+      "help_text": "",
+      "ordering": 40
+    }
+  },
+  {
+    "model": "inventory.objektstatus",
+    "pk": 5,
+    "fields": {
+      "updated_at": "2020-08-20T07:21:01.590Z",
+      "deleted_at": null,
+      "created_at": "2020-08-20T07:20:49Z",
+      "created_by": 1,
+      "text": "shipped",
+      "display_name": "Versandt",
+      "help_text": "",
+      "ordering": 50
+    }
+  }
+]

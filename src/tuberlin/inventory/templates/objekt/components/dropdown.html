@@ -1,0 +1,10 @@
+<!--
+<select name="{{ type }}[]" class="{{ type }}_select">
+    <option value="0">---</option>
+    {% for choice in choices %}
+        <option value="{{ choice.id }}" {% if choice.id == selected %}selected="selected"{% endif %}>{{ choice }}</option>
+    {% endfor %}
+</select>
+-->
+
+<input name="{{ type }}[]" class="{{ type }}_input" value="{{ selected }}" placeholder="--">

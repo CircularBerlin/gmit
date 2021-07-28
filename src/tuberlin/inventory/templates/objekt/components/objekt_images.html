@@ -1,0 +1,30 @@
+                    <div id="id_images_div">
+                        {% include 'objekt/components/image_list.html' %}
+                    </div>
+
+                    <hr>
+
+                    <p>Neues Bild hinzufügen</p>
+                    <form id="id_fileupload_form"
+                          enctype="multipart/form-data"
+                          action="{% url 'inventory_objekt_images' objekt.id %}"
+                          method="POST">
+                        {% csrf_token %}
+                        <input type="file" name="file">
+                        <input type="submit" value="Bild hinzufügen">
+                    </form>
+
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $("#id_fileupload_form").ajaxForm({
+                                beforeSubmit : function(arr, $form, options) {
+                                    $(".spinner").show();
+                                },
+                                success: function(data) {
+                                    alert("Gespeichert");
+                                    $(".spinner").hide();
+                                    $("#id_images_div").html(data.html);
+                                }
+                            });
+                        });
+                    </script>

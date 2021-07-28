@@ -1,0 +1,7 @@
+<ul>
+    {% for entry in log_entries %}
+        <li>
+            {{ entry.change_message }} um {{ entry.action_time }} bei {{ entry.user }}
+        </li>
+    {% endfor %}
+</ul>
