@@ -6,7 +6,11 @@ Diese Berichte enthalten EcoCost-Berichte. Es wird eine API bereitgestellt, um I
 
 ## Login
 
+https://gmit.material-mafia.net/accounts/login/
+
 ## Logout
+
+Klicken Sie auf Ihren Benutzernamen in der oberen rechten Ecke einer beliebigen Seite und klicken Sie auf "Logout".
 
 ## Angebote
 
