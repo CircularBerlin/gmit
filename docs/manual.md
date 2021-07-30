@@ -119,7 +119,11 @@ Ein vollständiges Protokoll aller Aktionen, die mit dem aktuellen Material durc
 
 ## Geber
 
-TODO
+Personen, die die Website mit Materialangeboten kontaktiert haben, werden hier aufgelistet.
+
+https://gmit.material-mafia.net/dashboard/people/
+
+Sie können die einzelnen Personen anzeigen, ihnen Notizen hinzufügen und ihre Angebote einsehen.
 
 ## Bericht
 
