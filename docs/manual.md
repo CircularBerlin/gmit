@@ -117,7 +117,7 @@ Diese Kommentare sind nur für den internen Gebrauch bestimmt. Sie können alles
 
 Ein vollständiges Protokoll aller Aktionen, die mit dem aktuellen Material durchgeführt wurden, finden Sie hier.
 
-## Geber
+## Materiallieferant/-spender
 
 Personen, die die Website mit Materialangeboten kontaktiert haben, werden hier aufgelistet.
 
