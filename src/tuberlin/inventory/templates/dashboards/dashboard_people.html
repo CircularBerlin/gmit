@@ -12,33 +12,23 @@
       <tr>
         <!-- 0 -->
         <th data-data="link">
-          Name
-        </th>
-
-        <!-- 1 -->
-        <th data-data="email">
           Email
         </th>
 
-        <!-- 2 -->
-        <th data-data="phone_number">
-          Telefonnummer
-        </th>
-
-        <!-- 3 -->
+        <!-- 1 -->
         <th data-data="updated_at_display">
           Letzte Aktualisierung
         </th>
 
-        <!-- 4 -->
+        <!-- 2 -->
         <th data-data="created_at_display">
           Hergestellt in
         </th>
 
-        <!-- 5 -->
+        <!-- 3 -->
         <th data-data="updated_at"></th>
 
-        <!-- 6 -->
+        <!-- 4 -->
         <th data-data="created_at"></th>
       </tr>
     </thead>
@@ -48,26 +38,30 @@
   </table>
 
   <script type="text/javascript">
+    $.fn.dataTableExt.pager.numbers_length = 30;
+
     $(document).ready(function() {
       $("#id_people_table").DataTable({
+        "stateSave": false,
+        "pagingType": "full_numbers",
         "order": [[3, "desc"]],
         "language": {
             "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
         },
         'columnDefs': [
             {
-                'orderData':[5], 'targets': [3]
+                'orderData':[2], 'targets': [1]
             },
             {
-                'orderData':[6], 'targets': [4]
+                'orderData':[4], 'targets': [3]
             },
             {
-                'targets': [5],
+                'targets': [4],
                 'visible': false,
                 'searchable': false
             },
             {
-                'targets': [6],
+                'targets': [3],
                 'visible': false,
                 'searchable': false
             },

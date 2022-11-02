@@ -85,3 +85,12 @@ div#id_fade_success_div {
    to {transform: rotate(359deg);}
 }
 
+ul#id_image_inputs_ul li {
+    list-style-type: none;
+    margin-bottom: 10px;
+}
+
+ul#id_image_inputs_ul {
+    padding: 0px;
+    margin: 0px;
+}

@@ -1,3 +1,4 @@
+Kunststoff
 Kunststoff	Polyethylene terephthalate (PET)
 Kunststoff	Polyethylene high density (HDPE)
 Kunststoff	Poly(vinyl chloride) (PVC)
@@ -12,6 +13,7 @@ Kunststoff	Polychloroprene (Neoprene, CR) rubber
 Kunststoff	Polycarbonate (PC)
 Kunststoff	Polyurethane (PUR)
 Kunststoff	Polyamide (nylon) (PA)
+Papier,Pappe,Kartonage
 Papier,Pappe,Kartonage	Kartonage
 Papier,Pappe,Kartonage	Papier
 Papier,Pappe,Kartonage	Pappe
@@ -29,10 +31,12 @@ Metall	Magnesium
 Metall	Nickel
 Metall	Zink
 Metall	Metall, andere
+Metall
 Verbundstoff	Aluminium Dibond
 Verbundstoff	Alu CORE
 Verbundstoff	Kunststoff, glasfaserverstärktem 
 Verbundstoff	Gummi, textilverstärkt
+Verbundstoff
 Holz	HDF (hochdichte Faserplatte)
 Holz	MDF (mitteldichte Faserplatte)
 Holz	Multiplex
@@ -54,6 +58,7 @@ Holz	Naturholz, Arkazie
 Holz	Naturholz, Esche
 Holz	Naturholz, Peak
 Holz	Naturholz, undefiniert
+Holz
 Textilien und Gewebe	Brokatstoff
 Textilien und Gewebe	Molton
 Textilien und Gewebe	Nessel
@@ -72,6 +77,8 @@ Textilien und Gewebe	Samt
 Textilien und Gewebe	Teppich und Auslegeware
 Textilien und Gewebe	Frottier
 Textilien und Gewebe	Glasfaser
+Textilien und Gewebe
 Glas	Flachglas
 Glas	Hohlglas
 Glas	Glasfasern und Waren daraus
+Glas

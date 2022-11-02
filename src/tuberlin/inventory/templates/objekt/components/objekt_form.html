@@ -9,12 +9,13 @@
             <tr>
                 <th>
                     <label>
-                        Materialen:
+                        Materialkategorien:
                     </label>
                 </th>
 
                 <td>
                     <ul class="form-panel-list" id="id_material_ul" >
+
                         {% if objekt %}
                             {% for material in objekt.material.all %}
                                 <li>
@@ -23,17 +24,15 @@
                             {% endfor %}
                         {% endif %}
 
-                        <li>
-                            {% include 'objekt/components/dropdown.html' with type='material' choices=materials %}
-                        </li>
+                        {% include 'objekt/components/dropdown.html' with type='material' choices=materials %}
                     </ul>
                     <ul class="form-panel-list">
                         <li>
-                            <a href="#" id="id_material_add_link">Material Hinzufügen</a>
+                            <a href="#" id="id_material_add_link">Geben Sie eine zusätzliche Materialkategorie an</a>
                         </li>
                         <li>
                             <span class="helptext">
-                                Sie können beliebig viele Materialkategorien hinzufügen. Wählen Sie "--", um eine Materialkategorie zu löschen. Alle Materialkategorien werden an Restado übermittelt.
+                                Sie können beliebig viele Materialkategorien geben. Wählen Sie "--", um eine Materialkategorie zu löschen. Alle Materialkategorien werden an Restado übermittelt.
                             </span>
                         </li>
                     </ul>
@@ -46,7 +45,7 @@
 
                 </td>
                 <td>
-                    <input type="submit" value="Speichern">
+                    <input type="submit" value="Speichern" style="background-color: #4e73df; color: white">
                 </td>
             </tr>
         </tbody>
@@ -57,25 +56,40 @@
     $(document).ready(function() {
         $('#id_material_add_link').click(function() {
             var last_element = $('#id_material_ul').children().last();
-            console.log(last_element);
             $('#id_material_ul').append(last_element.clone());
 
-            $(".material_input").devbridgeAutocomplete({
-                serviceUrl: '/autocomplete/material/',
-                minChars: 0,
-                onSelect: function(suggestion) {
+            init_category_handlers();
 
-                }
-            });
+            var last_select_category = $('#id_material_ul').children().last().children().first();
+            last_select_category.val('');
+            last_select_category.change();
             return false;
         });
 
-        $(".material_input").devbridgeAutocomplete({
-            serviceUrl: '/autocomplete/material/',
-            minChars: 0,
-            onSelect: function(suggestion) {
+        function init_category_handlers() {
+            $(".category-select").change(function() {
+                var target = $(this).next();
+                $.get('/autocomplete/subcategories/',
+                    {
+                        category: $(this).val()
+                    },
+                    function(data) {
+                        $(target).empty();
+                        $(target).append($('<option>', {
+                            value: '',
+                            text: '--'
+                        }));
 
-            }
-        });
+                        data.subcategories.forEach(function(sc, index) {
+                            $(target).append($('<option>', {
+                                value: sc.id,
+                                text : sc.subcategory
+                            }));
+                        });
+                    });
+            });
+        }
+
+        init_category_handlers();
     });
 </script>

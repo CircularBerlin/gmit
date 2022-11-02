@@ -5,7 +5,7 @@ import os
 from storages.backends.s3boto3 import S3Boto3Storage
 
 from inventory.models import Objekt, Offer, Comment, Image, Status, OfferStatus, \
-    OfferStatusLog, Person, Material
+    OfferStatusLog, Person, MaterialCategory
 
 
 class OfferForm(ModelForm):
@@ -19,8 +19,6 @@ class OfferForm(ModelForm):
             'image',
             'import_preferences',
             'email',
-            'person_name',
-            'phone_number',
             'provider_type',
             'provider_description'
         ]
@@ -69,12 +67,14 @@ class ObjektForm(ModelForm):
         super(ObjektForm, self).__init__(*args, **kwargs)
         self.fields['title'].help_text = 'Haupttitel wird an Restado übermittelt.'
         self.fields['unit'].help_text = 'Einheit wird an Restado übermittelt.'
-        self.fields['width'].help_text = 'Die Breite des Materials in Zentimetern, falls zutreffend. Wird an Restado übermittelt.'
-        self.fields['width'].help_text = 'Die Breite des Materials in Zentimetern, falls zutreffend. Wird an Restado übermittelt.'
+        self.fields['approximate'].help_text = 'Zeigt an, dass die Maße ungefähr sind.'
+        self.fields[
+            'length'].help_text = 'Die Langë des Materials in Zentimetern, falls zutreffend. Wird an Restado übermittelt.'
+        self.fields['width'].help_text = 'Die Breite oder Durchmesser des Materials in Zentimetern, falls zutreffend. Wird an Restado übermittelt.'
         self.fields['height'].help_text = 'Die Höhe des Materials in Zentimetern, falls zutreffend. Wird an Restado übermittelt.'
         self.fields['depth'].help_text = 'Die Tiefe des Materials in Zentimetern, falls zutreffend. Wird an Restado übermittelt.'
         self.fields['mass'].help_text = 'Die Masse des Materials in Kilogramm, falls zutreffend. Wird an Restado übermittelt.'
-        self.fields['count'].help_text = 'Die Anzahl der Quadratmeter oder Kilogramm des Materials im Lager. Wird an Restado übermittelt. Für undefinierten Betrag leer lassen.'
+        self.fields['count'].help_text = 'Die Anzahl der Quadratmeter, Liter, oder Kilogramm des Materials im Lager. Wird an Restado übermittelt. Für undefinierten Betrag leer lassen.'
         self.fields['description'].help_text = 'Beschreibung wird an Restado übermittelt.'
         self.fields['treatment_notes'].help_text = 'Behandlungshinweise wird an Restado übermittelt.'
         self.fields['condition'].help_text = 'Zustand wird an Restado übermittelt.'
@@ -88,6 +88,8 @@ class ObjektForm(ModelForm):
         fields = [
             'title',
             'unit',
+            'approximate',
+            'length',
             'width',
             'height',
             'depth',
@@ -108,7 +110,5 @@ class PersonForm(ModelForm):
 
         fields = [
             'email',
-            'name',
-            'phone_number',
             'notes'
         ]

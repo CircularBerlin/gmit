@@ -66,7 +66,7 @@ class DeletedBaseModelManager(Manager):
 class RestadoObjektManager(BaseModelManager):
     def get_queryset(self):
         return super().get_queryset().filter(available_on_restado=True,
-                                             sold_at__isnull=True,
+                                             # sold_at__isnull=True,
                                              archived_at__isnull=True)
 
 

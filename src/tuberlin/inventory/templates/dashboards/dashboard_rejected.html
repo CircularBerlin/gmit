@@ -19,8 +19,12 @@ Angebote
 </table>
 
 <script type="text/javascript">
+    $.fn.dataTableExt.pager.numbers_length = 30;
+    var objekts_table = null;
     $(document).ready(function() {
-      $("#id_objekts_table").DataTable({
+      objekts_table = $("#id_objekts_table").DataTable({
+        "stateSave": false,
+        "pagingType": "full_numbers",
         "order": [[4, "desc"]],
         "language": {
             "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"

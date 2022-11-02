@@ -11299,9 +11299,7 @@ span.helptext {
 
 div.tab-container {
     padding: 20 0xpx;
-    height: 60px;
-
-    margin-bottom: 10px;
+    height: 40px;
 }
 
 div.tab-container ul {

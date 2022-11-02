@@ -37,7 +37,7 @@ class BaseModel(models.Model):
              force_update=False,
              using=None,
              update_fields=None):
-        # self.updated_at = now()
+        self.updated_at = now()
         super(BaseModel, self).save(force_insert, force_update, using, update_fields)
 
 
@@ -45,22 +45,32 @@ class Image(BaseModel):
     filename = models.CharField(max_length=2000)
 
 
-class Material(BaseModel):
+class MaterialCategory(BaseModel):
     class Meta:
-        verbose_name = 'Material'
-        verbose_name_plural = 'Materialen'
-        ordering = ('category', 'text')
-
-    text = models.CharField(max_length=200,
-                            null=False,
-                            blank=False)
+        verbose_name = 'Materialkategorie'
+        verbose_name_plural = 'Materialkategorien'
+        ordering = ('category', 'subcategory')
 
     category = models.CharField(max_length=200,
                                 default='',
-                                null=False)
+                                null=False,
+                                verbose_name='Kategorie',
+                                help_text='Kategorie (zb: Glas, Holz, Metall')
+
+    subcategory = models.CharField(max_length=200,
+                                   null=True,
+                                   blank=True)
+
+    @property
+    def related_subcategories(self):
+        subcategories = MaterialCategory.objects.filter(category=self.category).order_by('subcategory').all()
+        return subcategories
 
     def __str__(self):
-        return "{}, {}".format(self.text, self.category)
+        if self.subcategory:
+            return "{} ({})".format(self.category, self.subcategory)
+        else:
+            return self.category
 
 
 class Status(BaseModel):
@@ -98,6 +108,7 @@ class Unit(models.TextChoices):
     QUADRATMETER = 'QUADRATMETER', _('Quadratmeter')
     LFM = 'LFM', _('LFM')
     STUECK = 'STUECK', _('Stück')
+    LITER = "LITER", _('Liter')
 
 
 class ProviderType(models.TextChoices):
@@ -107,7 +118,7 @@ class ProviderType(models.TextChoices):
 
 class ImportPreferences(models.TextChoices):
     PICKUP = 'PICKUP', _('Abholung')
-    DELIVERY = 'DELIVERY', _('Lieferung an Material Mafia (bevorzugt)')
+    DELIVERY = 'DELIVERY', _('Lieferung an Material Mafia')
 
 
 class Offer(BaseModel):
@@ -128,16 +139,6 @@ class Offer(BaseModel):
     provider_description = models.CharField(max_length=1000, null=True, blank=True)
 
     email = models.EmailField(blank=False)
-
-    person_name = models.CharField(max_length=200,
-                                   null=True,
-                                   blank=False,
-                                   verbose_name='Name')
-
-    phone_number = models.CharField(max_length=50,
-                                    null=True,
-                                    blank=False,
-                                    verbose_name='Telefonnummer')
 
     offer_status = models.ForeignKey(OfferStatus,
                                      default=1,
@@ -198,8 +199,7 @@ class Objekt(BaseModel):
     title = models.CharField(max_length=200,
                              verbose_name='Haupttitel')
 
-    material = models.ManyToManyField(Material,
-                                      verbose_name='Material')
+    material = models.ManyToManyField(MaterialCategory, verbose_name='Materialkategorien')
 
     unit = models.CharField(max_length=200,
                             null=True,
@@ -207,10 +207,18 @@ class Objekt(BaseModel):
                             default=Unit.QUADRATMETER,
                             verbose_name='Einheit')
 
+    approximate = models.BooleanField(default=False,
+                                      verbose_name='Messung ist ungefähr')
+
     width = models.FloatField(null=True,
                               blank=True,
                               default=None,
-                              verbose_name='Breite (cm)')
+                              verbose_name='Breite oder Durchmesser (cm)')
+
+    length = models.FloatField(null=True,
+                               blank=True,
+                               default=None,
+                               verbose_name='Länge')
 
     height = models.FloatField(null=True,
                                blank=True,
@@ -231,10 +239,10 @@ class Objekt(BaseModel):
                              default=None,
                              verbose_name='Gewicht (kg)')
 
-    count = models.IntegerField(null=True,
-                                blank=True,
-                                default=0,
-                                verbose_name='Stückanzahl')
+    count = models.FloatField(null=True,
+                              blank=True,
+                              default=0.0,
+                              verbose_name='Stückanzahl')
 
     condition = models.CharField(max_length=9,
                                  null=True,
@@ -271,7 +279,7 @@ class Objekt(BaseModel):
     knowledge_base = models.BooleanField(default=False)
 
     sold_at = models.DateTimeField(null=True)
-    sold_count = models.IntegerField(null=True)
+    sold_count = models.FloatField(null=True)
     sold_price_per_unit = models.FloatField(null=True)
     sold_by = models.ForeignKey(CustomUser, null=True, on_delete=models.PROTECT, related_name='sold_by')
 
@@ -309,6 +317,7 @@ class Objekt(BaseModel):
                 count=0,
                 unit=self.unit,
                 width=self.width,
+                length=self.length,
                 height=self.height,
                 depth=self.depth,
                 condition=self.condition,
@@ -372,14 +381,7 @@ class Person(BaseModel):
     email = models.EmailField(null=False,
                               unique=True,
                               verbose_name='Email')
-    name = models.CharField(max_length=200,
-                            null=True,
-                            blank=True,
-                            verbose_name='Name')
-    phone_number = models.CharField(max_length=50,
-                                    null=True,
-                                    blank=True,
-                                    verbose_name='Telefonnummer')
+
     notes = models.TextField(null=True,
                              blank=True,
                              verbose_name='Notiz')

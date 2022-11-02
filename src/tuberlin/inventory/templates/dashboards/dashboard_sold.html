@@ -1,7 +1,7 @@
 {% extends 'dashboards/base_dashboard.html' %}
 
 {% block title %}
-  Materialen
+  Materialien
 {% endblock %}
 
 {% block content %}
@@ -20,7 +20,7 @@
               Bild
           </th>
 
-          <th data-data="material_text">
+          <th data-data="material_text" class="material-text">
               Materialkategorie
           </th>
 
@@ -47,10 +47,15 @@
   </table>
 
   <script type="text/javascript">
+    $.fn.dataTableExt.pager.numbers_length = 30;
+    var objekts_table = null;
     $(document).ready(function() {
-      $("#id_objekts_table").DataTable({
+      objekts_table = $("#id_objekts_table").DataTable({
+        "stateSave": false,
+        "pagingType": "full_numbers",
+        "initComplete": set_page_from_cookie,
         "order": [[4, "desc"]],
-      "language": {
+        "language": {
             "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
         },
         'columnDefs': [
@@ -72,6 +77,8 @@
             },
         ],
       });
+
+      init_paging();
     });
   </script>
 {% endblock %}

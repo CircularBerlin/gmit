@@ -1,3 +1,5 @@
+{% load inventory_templatetags %}
+
 <div class="tab-container">
     <ul>
         <li class="tab {% if tab_stub == 'all' %}active{% endif %}">
@@ -31,3 +33,25 @@
         </li>
     </ul>
 </div>
+
+<div style="padding-bottom: 20px">
+    Nach Materialkategorie filtern:
+
+    <select id="id_material_category_select">
+        {% distinct_material_categories as mcs %}
+
+        <option value="">--</option>
+        {% for mc in mcs %}
+            <option value="{{ mc.category }}">{{ mc.category }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#id_material_category_select").change(function() {
+            var selectedValue = $(this).val();
+            objekts_table.columns(".material-text").search(selectedValue).draw();
+        });
+    });
+</script>

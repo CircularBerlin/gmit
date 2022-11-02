@@ -13,11 +13,18 @@
                 {% if objekt.sold_at %}
                     <p>Dieses Material wurde <b>verkauft</b> und <b>kann nicht wieder verkauft</b> werden.
                         <p>
-                            Verkauft {{ objekt.sold_count }} {{ objekt.unit }} at {{ objekt.sold_price_per_unit }} per {{ objekt.unit }} on {{ objekt.sold_at }} by {{ objekt.sold_by }}
+                            Verkauft {{ objekt.sold_count }} {{ objekt.unit }} für {{ objekt.sold_price_per_unit }}€ pro {{ objekt.unit }} am {{ objekt.sold_at }} {% if objekt.sold_by %} von {{ objekt.sold_by }} {% endif %}
                         </p>
+
                         {% if objekt.partial_sale_parent %}
-                        <p>Dieser Verkauf war ein Teilverkauf <a href="/objekt/{{ objekt.partial_sale_parent.id }}/">dieses Materials.</a></p>
-                {% endif %}
+                            <p>Dieser Verkauf war ein Teilverkauf <a href="/objekt/{{ objekt.partial_sale_parent.id }}/">dieses Materials.</a></p>
+                        {% endif %}
+
+                        <form action="/objekt/{{ objekt.id }}/sold/undo/" method="POST" id="id_sold_undo_form">
+                            {% csrf_token %}
+
+                            <input type="submit" value="Verkauf rückgängig machen">
+                        </form>
                 {% endif %}
             </div>
             {% endif %}

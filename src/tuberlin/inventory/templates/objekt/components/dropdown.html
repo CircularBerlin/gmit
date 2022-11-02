@@ -1,10 +1,27 @@
-<!--
-<select name="{{ type }}[]" class="{{ type }}_select">
-    <option value="0">---</option>
-    {% for choice in choices %}
-        <option value="{{ choice.id }}" {% if choice.id == selected %}selected="selected"{% endif %}>{{ choice }}</option>
-    {% endfor %}
-</select>
--->
+<li>
+    <select style="width: 49%; margin-right: 5px" class="category-select" name="category">
+        <option value="">--</option>
 
-<input name="{{ type }}[]" class="{{ type }}_input" value="{{ selected }}" placeholder="--">
+        {% for category in categories %}
+            <option value="{{ category.category }}" {% if category.category == selected.category %}selected="selected"{% endif %}>
+                {{ category.category }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <select style="width: 49%" name="subcategory[]">
+        {% if selected %}
+            <option value="">--</option>
+
+            {% for subcat in selected.related_subcategories %}
+                <option value="{{ subcat.id }}" {% if subcat == selected %}selected="selected"{% endif %}>
+                    {% if subcat.subcategory %}
+                        {{ subcat.subcategory }}
+                    {% else %}
+                        [nicht spezifiziert]
+                    {% endif %}
+                </option>
+            {% endfor %}
+        {% endif %}
+    </select>
+</li>

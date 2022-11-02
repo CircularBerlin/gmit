@@ -2,6 +2,14 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = '-t#_!hw&i$i5s0stwmh8)q=tbd27@92mzd2)xn%@igvfaqito3'
+
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 INSTALLED_APPS = [
@@ -51,6 +59,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'tuberlin.wsgi.application'
 
@@ -108,4 +117,16 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 from tuberlin.settings_local import (DATABASES, ALLOWED_HOSTS, AWS_ACCESS_KEY_ID,
                                      AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME,
-                                     FROM_EMAIL, EMAIL_BACKEND, DEBUG, SECRET_KEY)
+                                     FROM_EMAIL, EMAIL_BACKEND)
+
+
+assert DATABASES
+assert ALLOWED_HOSTS
+assert AWS_ACCESS_KEY_ID
+assert AWS_SECRET_ACCESS_KEY
+assert AWS_STORAGE_BUCKET_NAME
+assert FROM_EMAIL
+assert EMAIL_BACKEND
+
+AWS_S3_REGION_NAME = 'eu-frankfurt'
+AWS_S3_ENDPOINT_URL = 'https://s3.amazonaws.com'

@@ -1,11 +1,11 @@
 from django.core.management.base import BaseCommand
-from inventory.models import Material
+from inventory.models import MaterialCategory
 
 
 class Command(BaseCommand):
     help = ''
 
-    Material.objects.all().delete()
+    MaterialCategory.objects.all().delete()
 
     def handle(self, *args, **options):
         with open('./inventory/fixtures/materials.csv') as file_handle:
@@ -13,5 +13,9 @@ class Command(BaseCommand):
 
         for entry in entries:
             print(entry)
-            cat, mat = entry.split('\t')
-            Material.objects.get_or_create(text=mat, category=cat)
+            splits = entry.split('\t')
+            if len(splits) == 1:
+                cat, mat = splits[0], ''
+            else:
+                cat, mat = splits
+            MaterialCategory.objects.get_or_create(text=mat, category=cat)

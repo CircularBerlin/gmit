@@ -210,7 +210,7 @@ Infos zum Material
     function init_sold_form() {
         $("#id_sold_form").ajaxForm({
             beforeSubmit : function(arr, $form, options) {
-                return true;
+                return confirm("Möchten Sie dies wirklich als verkauft markieren?");
             },
             success: function(data) {
                 console.log(data);
@@ -219,10 +219,34 @@ Infos zum Material
                 } else {
                     $("#id_sold_div").html(data.html);
                     init_sold_form();
+                    init_sold_undo_form();
                     $("#id_count").val(data.remaining_count);
                     alert("Material wurde verkauft");
                     refresh_aktions();
                 }
+            }
+        });
+    }
+
+    function init_sold_undo_form() {
+        $("#id_sold_undo_form").ajaxForm({
+            beforeSubmit : function(arr, $form, options) {
+                return true;
+            },
+            success: function(data) {
+                if(data.success == true) {
+                    if(data.url) {
+                        alert("Dieser Teilverkauf wurde rückgängig gemacht und der verkaufte Betrag wurde wieder dem Originalmaterial hinzugefügt. Sie werden zum Verwaltungsbildschirm für das Originalmaterial weitergeleitet.")
+                        window.location = data.url;
+                    } else {
+                        $("#id_sold_div").html(data.html);
+                        init_sold_form();
+                        init_sold_undo_form();
+                        $("#id_count").val(data.remaining_count);
+                        refresh_aktions();
+                    }
+                }
+                init_sold_undo_form();
             }
         });
     }
@@ -314,6 +338,7 @@ Infos zum Material
         });
 
         init_sold_form();
+        init_sold_undo_form();
 
         $.ajaxSetup({
              beforeSend: function(xhr, settings) {

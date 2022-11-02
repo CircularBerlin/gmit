@@ -1,7 +1,7 @@
 from django.shortcuts import reverse
 from django.template.loader import get_template
 from rest_framework import serializers
-from inventory.models import Objekt, Image, Person, Offer, Material
+from inventory.models import Objekt, Image, Person, Offer, MaterialCategory
 from django.template.defaultfilters import date as _date
 
 
@@ -32,7 +32,7 @@ class PersonSerializer(serializers.ModelSerializer):
         if instance:
             return '<a href="{}">{}</a>'.format(
                 reverse('inventory_person', args=(instance.id,)),
-                instance.name
+                instance.email
             )
         return None
 
@@ -42,8 +42,6 @@ class PersonSerializer(serializers.ModelSerializer):
             'id',
             'link',
             'email',
-            'phone_number',
-            'name',
             'notes',
             'updated_at_display',
             'created_at_display',
@@ -127,10 +125,10 @@ class OfferSerializer(serializers.ModelSerializer):
             'thumbnail',
             'offer_status_text',
             'recent_offer_status_time',
-            'person_name',
             'created_at_display',
             'updated_at',
-            'created_at'
+            'created_at',
+            'email'
         ]
 
 
@@ -210,6 +208,7 @@ class ObjektSerializer(serializers.ModelSerializer):
             'width',
             'height',
             'depth',
+            'length',
             'mass',
             'count',
             'description',
@@ -239,7 +238,7 @@ class RestadoObjektSerializer(serializers.ModelSerializer):
         if instance:
             return [{
                 'id': mat.id,
-                'text': mat.text,
+                'text': mat.subcategory,
                 'category': mat.category
             } for mat in instance.material.all()]
         return []
@@ -252,12 +251,14 @@ class RestadoObjektSerializer(serializers.ModelSerializer):
             'id',
 
             'material',
+            'approximate',
 
             'title',
 
             'unit',
             'width',
             'height',
+            'length',
             'depth',
             'mass',
             'count',
@@ -275,7 +276,7 @@ class RestadoMaterialSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
 
     class Meta:
-        model = Material
+        model = MaterialCategory
         fields = [
             'id',
             'category',

@@ -134,6 +134,9 @@ urlpatterns = [
          views.objekt_aktions,
          name='inventory_objekt_aktions'),
 
+    path('objekt/<int:objekt_pk>/sold/undo/',
+         views.objekt_sold_undo,
+         name='inventory_objekt_sold_undo'),
 
     path('objekt/<int:objekt_pk>/sold/',
          views.objekt_sold,
@@ -235,6 +238,7 @@ urlpatterns = [
 
     path('accounts/', include('django.contrib.auth.urls')),
 
-    path('autocomplete/material/', views.material_autocomplete)
+    path('autocomplete/material/', views.material_autocomplete),
+    path('autocomplete/subcategories/', views.subcategories_autocomplete)
 ]
 

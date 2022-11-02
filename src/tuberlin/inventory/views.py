@@ -19,7 +19,7 @@ from rest_framework import filters
 from storages.backends.s3boto3 import S3Boto3Storage
 
 from inventory.forms import OfferForm, ObjektForm, PersonForm
-from inventory.models import Objekt, Offer, Comment, Image, Status, OfferStatus, OfferStatusLog, Person, Material
+from inventory.models import Objekt, Offer, Comment, Image, Status, OfferStatus, OfferStatusLog, Person, MaterialCategory
 from inventory.serializers import ObjektSerializer, RestadoObjektSerializer, RestadoMaterialSerializer, \
     PersonSerializer, OfferSerializer
 from inventory.utils import convert_float
@@ -151,7 +151,7 @@ class PersonAPIViewSet(viewsets.ModelViewSet):
     queryset = Person.objects.filter(deleted_at__isnull=True).order_by('id')
     serializer_class = PersonSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['email', 'vat']
+    search_fields = ['email']
 
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -275,7 +275,7 @@ class RestadoObjektAPIViewSet(viewsets.ModelViewSet):
 
 
 class RestadoMaterialAPIViewSet(viewsets.ModelViewSet):
-    queryset = Material.objects.all().order_by('id')
+    queryset = MaterialCategory.objects.all().order_by('id')
     serializer_class = RestadoMaterialSerializer
 
     authentication_classes = [TokenAuthentication]
@@ -308,22 +308,13 @@ def offer_create(request: HttpRequest) -> HttpResponse:
         offer_form = OfferForm(request.POST, request.FILES)
         if offer_form.is_valid():
             offer = offer_form.save()
-
             email = request.POST['email'].lower()
-            phone_number = request.POST['phone_number']
-            person_name = request.POST['person_name']
 
             person = Person.objects.filter(email=email).first()
             if not person:
                 person = Person.objects.create(
                     email=email
                 )
-
-            if person.phone_number is None:
-                person.phone_number = phone_number
-
-            if person.name is None:
-                person.name = person_name
 
             person.save()
 
@@ -353,12 +344,10 @@ def objekt_create(request: HttpRequest) -> HttpResponse:
             objekt.save()
 
             objekt.material.clear()
-            materials = request.POST.getlist('material[]')
-            for mat_id in materials:
-                if mat_id != '' and mat_id is not None:
-                    for m in Material.objects.all():
-                        if str(m) == mat_id:
-                            objekt.material.add(m)
+            categories = request.POST.getlist('subcategory[]')
+            for category in categories:
+                if category != '':
+                    objekt.material.add(MaterialCategory.objects.get(pk=int(category)))
 
             LogEntry.objects.log_action(
                 user_id=request.user.id,
@@ -379,7 +368,7 @@ def objekt_create(request: HttpRequest) -> HttpResponse:
                   context={
                       'objekt_form': objekt_form,
                       'objekts': objekts,
-                      'materials': Material.objects.all()
+                      'categories': MaterialCategory.objects.distinct('category').all()
                   })
 
 
@@ -393,12 +382,10 @@ def objekt(request: HttpRequest, objekt_pk: int) -> HttpResponse:
             objekt_form.save()
 
             objekt.material.clear()
-            materials = request.POST.getlist('material[]')
-            for mat_id in materials:
-                if mat_id != '' and mat_id is not None:
-                    for m in Material.objects.all():
-                        if str(m) == mat_id:
-                            objekt.material.add(m)
+            categories = request.POST.getlist('subcategory[]')
+            for category in categories:
+                if category != '':
+                    objekt.material.add(MaterialCategory.objects.get(pk=int(category)))
 
             LogEntry.objects.log_action(
                 user_id=request.user.id,
@@ -419,7 +406,7 @@ def objekt(request: HttpRequest, objekt_pk: int) -> HttpResponse:
                           content_type_id=ContentType.objects.get_for_model(Objekt).pk,
                           object_id=objekt.id
                       ),
-                      'materials': Material.objects.all()
+                      'categories': MaterialCategory.objects.distinct('category').all()
                   })
 
 
@@ -481,7 +468,9 @@ def objekt_comment(request, objekt_pk: int) -> HttpResponseRedirect:
 def objekt_images(request, objekt_pk: int) -> HttpResponseRedirect:
     objekt = get_object_or_404(Objekt, pk=objekt_pk)
 
-    for file_obj in request.FILES.getlist('file'):
+    files = request.FILES.getlist('file')
+
+    for file_obj in files:
         # organize a path for the file in bucket
         file_directory_within_bucket = 'images/objekt/{objekt_id}/{guid}'.format(
             objekt_id=objekt.id,
@@ -646,6 +635,7 @@ def objekt_clone(request: HttpRequest) -> HttpResponseRedirect:
         count=objekt.count,
         unit=objekt.unit,
         width=objekt.width,
+        length=objekt.length,
         height=objekt.height,
         depth=objekt.depth,
         condition=objekt.condition,
@@ -665,6 +655,9 @@ def objekt_clone(request: HttpRequest) -> HttpResponseRedirect:
 
     for image in objekt.images.all():
         cloned_objekt.images.add(image)
+
+    cloned_objekt.thumbnail_image = objekt.thumbnail_image
+    cloned_objekt.save()
 
     LogEntry.objects.log_action(
         user_id=request.user.id,
@@ -753,10 +746,60 @@ def objekt_restado(request: HttpRequest, objekt_pk: int) -> HttpResponseRedirect
 
 
 @login_required
+def objekt_sold_undo(request: HttpRequest, objekt_pk: int) -> HttpResponseRedirect:
+    objekt = Objekt.objects.get(pk=objekt_pk)
+    if objekt.partial_sale_parent:
+        objekt.partial_sale_parent.count += objekt.sold_count
+        objekt.partial_sale_parent.save()
+
+        objekt.delete()
+
+        LogEntry.objects.log_action(
+            user_id=request.user.id,
+            content_type_id=ContentType.objects.get_for_model(objekt).pk,
+            object_id=objekt.partial_sale_parent.id,
+            object_repr=str(objekt.partial_sale_parent),
+            change_message="Der Materialverkauf wurde rückgängig gemacht",
+            action_flag=CHANGE)
+
+        return JsonResponse({
+            'success': True,
+            'url': '/objekt/{}/'.format(objekt.partial_sale_parent.id)
+        })
+
+    else:
+        objekt.count = objekt.sold_count
+        objekt.sold_count = None
+        objekt.sold_at = None
+        objekt.save()
+
+        LogEntry.objects.log_action(
+            user_id=request.user.id,
+            content_type_id=ContentType.objects.get_for_model(objekt).pk,
+            object_id=objekt_pk,
+            object_repr=str(objekt),
+            change_message="Der Materialverkauf wurde rückgängig gemacht",
+            action_flag=CHANGE)
+
+        objekt.refresh_from_db()
+        template = get_template('objekt/components/sold.html')
+        html = template.render(request=request, context={
+            'objekt': objekt
+        })
+
+        return JsonResponse({
+            'success': True,
+            'html': html,
+            'remaining_count': objekt.count
+        })
+
+
+
+@login_required
 def objekt_sold(request: HttpRequest, objekt_pk: int) -> HttpResponseRedirect:
     objekt = Objekt.objects.get(pk=objekt_pk)
 
-    sold_count = int(request.POST['count'])
+    sold_count = convert_float(request.POST['count'])
     price = convert_float(request.POST['price'])
 
     objekt.sell(sold_count, price, sold_by=request.user)
@@ -900,22 +943,39 @@ def index(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect(redirect_to=reverse('inventory_objekt_dashboard_materials'))
     else:
-        return HttpResponseRedirect(redirect_to='/accounts/login/')
+        return HttpResponseRedirect(redirect_to='/offer/')
 
 
 def material_autocomplete(request):
     value = request.GET['query'].strip()
 
     if value != '':
-        suggestions = Material.objects.filter(
+        suggestions = MaterialCategory.objects.filter(
             models.Q(text__icontains=value) | models.Q(category__icontains=value)
         )
     else:
-        suggestions = Material.objects.all()
+        suggestions = MaterialCategory.objects.all()
 
     return JsonResponse({
         'success': True,
         'suggestions': [str(s) for s in suggestions]
+    })
+
+
+def subcategories_autocomplete(request):
+    value = request.GET['category'].strip()
+
+    subcategories = MaterialCategory.objects.filter(
+        category=value
+    ).order_by('subcategory').values('id', 'subcategory')
+
+    for subc in subcategories:
+        if not subc['subcategory']:
+            subc['subcategory'] = '[nicht spezifiziert]'
+
+    return JsonResponse({
+        'success': True,
+        'subcategories': list(subcategories)
     })
 
 
@@ -925,9 +985,9 @@ def inventory_report(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="{}"'.format(name)
 
-    writer = csv.writer(response)
+    writer = csv.writer(response, dialect='excel')
     writer.writerow(["Haupttitel", "Materialkategorie", "Letzte Aktualisierung", "Hergestellt in",
-                     "Einheit", "Breite (cm)",
+                     "Einheit", "Länge (cm)", "Breite (cm)",
                      "Höhe (cm)", "Tiefe (cm)", "Gewicht (kg)",
                      "Einheitanzahl", "Beschreibung", "Zustand",
                      "Verkaufspreis", "Referenzpreis", "EcoCost", "Verkauft am",
@@ -935,31 +995,34 @@ def inventory_report(request):
                      "Verkaufte Einheit * Verkaufspreis pro Einheit",
                      "Verkaufte Einheit * EcoCost"])
 
-    for objekt in Objekt.objects.order_by('sold_at', 'created_at').all():
+    for objekt in Objekt.objects.filter(deleted_at__isnull=True).order_by('sold_at', 'created_at').all():
         row = []
 
         row.append(objekt.title)
-        row.append("; ".join([str(m) for m in objekt.material.all()]))
+        row.append(" | ".join([str(m) for m in objekt.material.all()]))
         row.append(objekt.created_at)
         row.append(objekt.updated_at)
         row.append(objekt.unit)
+        row.append(objekt.length)
         row.append(objekt.width)
         row.append(objekt.height)
         row.append(objekt.depth)
         row.append(objekt.mass)
-        row.append(objekt.count)
+        row.append(str(objekt.count).replace(".", ","))
         row.append(objekt.description)
         row.append(objekt.condition)
         row.append(objekt.price)
         row.append(objekt.reference_price)
         row.append(objekt.eco_cost)
         row.append(objekt.sold_at)
-        row.append(objekt.sold_count)
-        row.append(objekt.sold_price_per_unit)
-        row.append(objekt.sold_price_per_unit * objekt.sold_count if (
-                objekt.sold_price_per_unit and objekt.sold_count) else '')
-        row.append(objekt.eco_cost * objekt.sold_count if (
-                objekt.eco_cost and objekt.sold_count) else '')
+        row.append(str(objekt.sold_count).replace(".", ","))
+        row.append(str(objekt.sold_price_per_unit).replace(".", ","))
+
+        sold_price_per_unit = objekt.sold_price_per_unit * objekt.sold_count if (objekt.sold_price_per_unit and objekt.sold_count) else ''
+        row.append(str(sold_price_per_unit).replace(".", ","))
+
+        eco_cost = objekt.eco_cost * objekt.sold_count if (objekt.eco_cost and objekt.sold_count) else ''
+        row.append(str(eco_cost).replace(".", ","))
 
         writer.writerow(row)
 
@@ -977,7 +1040,6 @@ def monthly_report(request):
 
     objekts = Objekt.objects.filter(sold_at__isnull=False).annotate(zeitraum=TruncMonth('sold_at'))
 
-    # this is probably possible using the django ORM but I brute-forced it instead
     months = {}
     for objekt in objekts:
         if objekt.zeitraum not in months:

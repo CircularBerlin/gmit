@@ -4,14 +4,29 @@
 
                     <hr>
 
-                    <p>Neues Bild hinzufügen</p>
+                    <p>Neue(s) Bild(er) hinzufügen</p>
                     <form id="id_fileupload_form"
                           enctype="multipart/form-data"
                           action="{% url 'inventory_objekt_images' objekt.id %}"
                           method="POST">
                         {% csrf_token %}
-                        <input type="file" name="file">
-                        <input type="submit" value="Bild hinzufügen">
+
+                        <ul id="id_image_inputs_ul">
+                            <li><input type="file" name="file" class="image-upload-file"></li>
+                            <li><input type="file" name="file" class="image-upload-file"></li>
+                            <li><input type="file" name="file" class="image-upload-file"></li>
+                            <li><input type="file" name="file" class="image-upload-file"></li>
+                            <li><input type="file" name="file" class="image-upload-file"></li>
+                            <li><input type="file" name="file" class="image-upload-file"></li>
+                            <li><input type="file" name="file" class="image-upload-file"></li>
+                            <li><input type="file" name="file" class="image-upload-file"></li>
+                            <li><input type="file" name="file" class="image-upload-file"></li>
+                        </ul>
+
+
+                        <a href="#" id="id_image_input_add_link">Fügen Sie eine weitere Bildeingabe hinzu</a><br><br>
+
+                        <input type="submit" value="Bild(er) hinzufügen">
                     </form>
 
                     <script type="text/javascript">
@@ -24,7 +39,13 @@
                                     alert("Gespeichert");
                                     $(".spinner").hide();
                                     $("#id_images_div").html(data.html);
+                                    $(".image-upload-file").val('');
                                 }
+                            });
+
+                            $("#id_image_input_add_link").click(function() {
+                                $("#id_image_inputs_ul").append('<li><input type="file" name="file"></li>');
+                                return false;
                             });
                         });
                     </script>

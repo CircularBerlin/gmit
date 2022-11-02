@@ -10671,7 +10671,7 @@
 		 *  @example
 		 *    $(document).ready( function () {
 		 *      $('#example').dataTable( {
-		 *        "stateSave": true
+		 *        "stateSave": false
 		 *      } );
 		 *    } );
 		 */
@@ -10999,7 +10999,7 @@
 		 *  @example
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
-		 *        "stateSave": true,
+		 *        "stateSave": false,
 		 *        "stateLoadCallback": function (settings, callback) {
 		 *          $.ajax( {
 		 *            "url": "/state_load",
@@ -11042,7 +11042,7 @@
 		 *    // Remove a saved filter, so filtering is never loaded
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
-		 *        "stateSave": true,
+		 *        "stateSave": false,
 		 *        "stateLoadParams": function (settings, data) {
 		 *          data.oSearch.sSearch = "";
 		 *        }
@@ -11053,7 +11053,7 @@
 		 *    // Disallow state loading by returning false
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
-		 *        "stateSave": true,
+		 *        "stateSave": false,
 		 *        "stateLoadParams": function (settings, data) {
 		 *          return false;
 		 *        }
@@ -11077,7 +11077,7 @@
 		 *    // Show an alert with the filtering value that was saved
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
-		 *        "stateSave": true,
+		 *        "stateSave": false,
 		 *        "stateLoaded": function (settings, data) {
 		 *          alert( 'Saved filter was: '+data.oSearch.sSearch );
 		 *        }
@@ -11102,7 +11102,7 @@
 		 *  @example
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
-		 *        "stateSave": true,
+		 *        "stateSave": false,
 		 *        "stateSaveCallback": function (settings, data) {
 		 *          // Send an Ajax request to the server with the state object
 		 *          $.ajax( {
@@ -11143,7 +11143,7 @@
 		 *    // Remove a saved filter, so filtering is never saved
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
-		 *        "stateSave": true,
+		 *        "stateSave": false,
 		 *        "stateSaveParams": function (settings, data) {
 		 *          data.oSearch.sSearch = "";
 		 *        }

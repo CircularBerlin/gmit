@@ -21,7 +21,7 @@
   <!-- Custom scripts for all pages-->
   <script src="/static/js/sb-admin-2.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
-  <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+  <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
   <script src="/static/js/tuberlin.js"></script>
   <script src="/static/js/autocomplete.js"></script>
   <script type="text/javascript"
@@ -63,7 +63,7 @@
       <li class="nav-item {% if menu_stub == 'materials' %}active{% endif %}">
         <a class="nav-link" href="{% url 'inventory_objekt_dashboard_materials' %}">
           <i class="fa fa-warehouse"></i>
-          <span>Materialen</span></a>
+          <span>Materialien</span></a>
       </li>
 
       <li class="nav-item {% if menu_stub == 'people' %}active{% endif %}">
@@ -90,6 +90,21 @@
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
+            <li class="tab dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="/admin/inventory/materialcategory/" id="alertsDropdown">
+                <i class="fas fa-list"></i>
+                <!-- Counter - Alerts -->
+                <span>&nbsp;Alle Materialkategorie</span>
+              </a>
+            </li>
+
+            <li class="tab dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="/admin/inventory/materialcategory/add/" id="alertsDropdown">
+                <i class="fas fa-plus"></i>
+                <!-- Counter - Alerts -->
+                <span>&nbsp;Neues Materialkategorie erstellen</span>
+              </a>
+            </li>
 
             <li class="tab dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle" href="/objekt/" id="alertsDropdown">
@@ -168,7 +183,8 @@
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span></span>
+            <span>GMIT als Tool, entwickelt im Rahmen des von der DBU geförderten Projekts “Reallabor Zirkuläres Wirtschaften im urbanen Kontext”.
+GMIT Nutzungsrechte sind unter der MIT-Lizenz <a href="https://opensource.org/licenses/MIT">(link)</a> veröffentlicht. </span>
           </div>
         </div>
       </footer>
@@ -204,5 +220,22 @@
     </div>
   </div>
 </body>
+
+<script type="text/javascript">
+  function init_paging() {
+    $(window).bind('unload', function(){
+      Cookies.set('data_table_page_number', objekts_table.page());
+      return true;
+    });
+  }
+
+  function set_page_from_cookie() {
+    var data_table_page_number = parseInt(Cookies.get('data_table_page_number'));
+    if(data_table_page_number) {
+      console.log(data_table_page_number);
+      objekts_table.page(data_table_page_number).draw(false);
+    }
+  }
+</script>
 
 </html>

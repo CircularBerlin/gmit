@@ -14,37 +14,25 @@
 
 <div class="form-container">
     <h3>Lieferpräferenzen</h3>
-    <select name="import_preferences" id="id_import_preferences">
+    <select name="import_preferences" id="id_import_preferences" style="width: 100%">
         <option value="PICKUP">Abholung</option>
 
-        <option value="DELIVERY" selected="selected">Lieferung an Material Mafia (bevorzugt)</option>
+        <option value="DELIVERY" selected="selected">Lieferung an Material Mafia</option>
 
     </select>
 </div>
 
 <div class="form-container">
         <p>
-            Name *
-            <br>
-            <input type="text" name="person_name" maxlength="200" required="" id="id_person_name">
-        </p>
-
-        <p>
             Email *
             <br>
-            <input type="email" name="email" maxlength="254" required="" id="id_email">
-        </p>
-
-        <p>
-            Telefonnummer *
-            <br>
-            <input type="text" name="phone_number" maxlength="50" required="" id="id_phone_number">
+            <input type="email" name="email" maxlength="254" required="" id="id_email" style="width: 100%">
         </p>
 
         <p>
             Anbietertyp
             <br>
-            <select name="provider_type" id="id_provider_type_select">
+            <select name="provider_type" id="id_provider_type_select" style="width: 100%">
                 <option value="PRIVATE">Privat</option>
                 <option value="COMMERCIAL">Kommzerziell</option>
             </select>
@@ -59,7 +47,7 @@
 
 <div class="form-container">
     <p>
-    Wir verwenden die hier angegebenen Kontaktinformationen nur, um auf Ihr Materialspendenangebot zu antworten. Wir werden Ihren Arbeitsbereich zur Abschätzung des Abfallvermeidungspotenzials zur Kenntnis nehmen. Alle Informationen werden gemäß GDPR verarbeitet.
+    Wir verwenden die hier angegebenen Kontaktinformationen nur, um auf Ihr Materialspendenangebot zu antworten. Wir werden Ihren Arbeitsbereich zur Abschätzung des Abfallvermeidungspotenzials zur Kenntnis nehmen. Alle Informationen werden gemäß GDPR verarbeitet. Um Ihre Daten zu überprüfen oder entfernen zu lassen, wenden Sie sich bitte an info@material-mafia.net.
     </p>
     <input type="checkbox" required="required"> Ich bestätige, dass die oben genannten Informationen in Übereinstimmung mit der GDPR gespeichert werden.
 </div>
@@ -68,6 +56,12 @@
     <input type="submit" value="Abschicken"></td>
 </div>
 
+<hr/>
+
+<div>
+<p><span>GMIT als Tool, entwickelt im Rahmen des von der DBU geförderten Projekts “Reallabor Zirkuläres Wirtschaften im urbanen Kontext”.
+GMIT Nutzungsrechte sind unter der MIT-Lizenz <a href="https://opensource.org/licenses/MIT">(link)</a> veröffentlicht. </span></p>
+</div>
 <script type="text/javascript">
     $(document).ready(function() {
         $("#id_provider_type_select").change(function() {
